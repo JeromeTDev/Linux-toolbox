@@ -6,6 +6,11 @@ This repository serves as a central place for all my useful bash scripts — fro
 I will keep adding my handy scripts here in the future, so you can find all my tools in one place.
 
 ---
+## My Bootstrap
+```bash
+bash <(curl -s https://raw.githubusercontent.com/JeromeTDev/Linux-toolbox/main/bootstrap.sh)
+```
+--- 
 
 ## Available Scripts
 
