@@ -40,6 +40,9 @@ if [[ "$ans" =~ ^[Yy]$ ]]; then
     [[ "$ans2" =~ ^[Yy]$ ]] && ./install.sh
 fi
 
+chmod +x ~/.dotfiles/install.sh
+
+
 echo "✅ Öffentlicher Bootstrap abgeschlossen!"
 echo "- Prüfe privat geklonte Dotfiles"
 echo "- Führe manuelle Installation nur nach Prüfung aus"
