@@ -34,13 +34,12 @@ read -p "Weiter? [y/N] " ans
 if [[ "$ans" =~ ^[Yy]$ ]]; then
     git clone git@github.com:$github_user/$dotfiles_repo.git ~/.dotfiles
     cd ~/.dotfiles
+    chmod +x install.sh 
     echo "Letzter Commit:"
     git log -1 --oneline
     read -p "Install-Skript ausführen? [y/N] " ans2
     [[ "$ans2" =~ ^[Yy]$ ]] && ./install.sh
 fi
-
-chmod +x ~/.dotfiles/install.sh
 
 
 echo "✅ Öffentlicher Bootstrap abgeschlossen!"
