@@ -1,28 +1,40 @@
 #!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
 
-# 1. Git installieren (wenn nicht vorhanden)
+echo "🚀 Starte sicheres Dev Bootstrap"
+
+# --- Git prüfen ---
 if ! command -v git >/dev/null 2>&1; then
-    sudo apt update
-    sudo apt install -y git
+    read -p "Git ist nicht installiert. Jetzt installieren? [y/N] " ans
+    [[ "$ans" =~ ^[Yy]$ ]] && sudo apt update && sudo apt install -y git
 fi
 
-# 2. SSH Schlüssel erzeugen (falls noch nicht existiert)
+# --- SSH-Key prüfen ---
 if [ ! -f ~/.ssh/id_ed25519 ]; then
-    read -p "Gib deine Email für den SSH-Key an: " user_email
-    ssh-keygen -t ed25519 -C "$user_email" -f ~/.ssh/id_ed25519 -N ""
-    echo "Public Key für GitHub:"
-    cat ~/.ssh/id_ed25519.pub
-    echo "Füge den Key in GitHub → Settings → SSH Keys ein"
+    echo "Kein SSH-Key gefunden."
+    echo "Erstelle SSH-Key manuell oder folge Anleitung:"
+    echo "ssh-keygen -t ed25519 -C 'your_email@example.com'"
+    echo "Dann Key zu GitHub hinzufügen."
     read -p "Weiter mit ENTER, wenn erledigt..."
 fi
 
-# 3. GitHub User & Repo abfragen
-read -p "Gib deinen GitHub-Benutzernamen ein: " github_user
-read -p "Gib den privaten Dotfiles-Repo-Namen ein: " dotfiles_repo
+# --- Privates Repo --- 
+read -p "GitHub-Benutzername für privates Repo: " github_user
+read -p "Privates Dotfiles-Repo (Name): " dotfiles_repo
 
-# 4. Privates Dotfiles Repo klonen
-git clone git@github.com:$github_user/$dotfiles_repo.git ~/.dotfiles
+echo "Du bist im Begriff, folgendes Repo zu klonen:"
+echo "git@github.com:$github_user/$dotfiles_repo.git"
+read -p "Weiter? [y/N] " ans
+if [[ "$ans" =~ ^[Yy]$ ]]; then
+    git clone git@github.com:$github_user/$dotfiles_repo.git ~/.dotfiles
+    cd ~/.dotfiles
+    echo "Letzter Commit:"
+    git log -1 --oneline
+    read -p "Install-Skript ausführen? [y/N] " ans2
+    [[ "$ans2" =~ ^[Yy]$ ]] && ./install.sh
+fi
 
-# 5. Install-Script starten
-cd ~/.dotfiles
-./install.sh
+echo "✅ Öffentlicher Bootstrap abgeschlossen!"
+echo "- Prüfe privat geklonte Dotfiles"
+echo "- Führe manuelle Installation nur nach Prüfung aus"
